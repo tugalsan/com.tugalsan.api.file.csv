@@ -10,7 +10,7 @@ import com.tugalsan.api.unsafe.client.*;
 public class TS_FileCsvUtils {
 
     private static void printRecord(CSVPrinter printer, List data) {
-        TGS_UnSafe.execute(() -> {
+        TGS_UnSafe.run(() -> {
             if (data == null) {
                 return;
             }
@@ -19,7 +19,7 @@ public class TS_FileCsvUtils {
     }
 
     public static Path toFile(TGS_ListTable source, Path destFile, boolean excelStyle) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             try ( var writer = Files.newBufferedWriter(destFile);) {
                 var f = excelStyle ? CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim() : CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim();
                 var csvPrinter = new CSVPrinter(writer, f);
@@ -31,7 +31,7 @@ public class TS_FileCsvUtils {
     }
 
     public static TGS_ListTable toTable(Path sourceFile, boolean excelStyle) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             try ( var reader = Files.newBufferedReader(sourceFile);) {
                 var destTable = new TGS_ListTable();
                 var f = excelStyle ? CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim() : CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim();
