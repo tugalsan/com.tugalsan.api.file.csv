@@ -33,7 +33,7 @@ public class TS_FileCsvUtils {
     public static TGS_ListTable toTable(Path sourceFile, boolean excelStyle) {
         return TGS_UnSafe.call(() -> {
             try ( var reader = Files.newBufferedReader(sourceFile);) {
-                var destTable = new TGS_ListTable();
+                var destTable = TGS_ListTable.ofStr();
                 var f = excelStyle ? CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim() : CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim();
                 var csvTable = new CSVParser(reader, f);
                 var csvHeaders = csvTable.getHeaderNames();
