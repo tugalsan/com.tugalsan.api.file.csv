@@ -6,29 +6,29 @@ import java.util.*;
 import java.util.stream.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.union.client.TGS_Union;
-import com.tugalsan.api.union.client.TGS_UnionUtils;
 import java.io.IOException;
 
 public class TS_FileCsvUtils {
 
-    private static void printRecord(CSVPrinter printer, List data) {
-        if (data == null) {
-            return;
-        }
-        try {
-            printer.printRecord(data);
-        } catch (IOException ex) {
-            TGS_UnionUtils.throwAsRuntimeException(ex);
-        }
-    }
-
-    public static TGS_Union<Path> toFile(TGS_ListTable source, Path destFile, boolean excelStyle) {
+    public static TGS_Union<List<TGS_Union<Boolean>>> toFile(TGS_ListTable source, Path destFile, boolean excelStyle) {
+        List<TGS_Union<Boolean>> results = TGS_ListUtils.of();
         try (var writer = Files.newBufferedWriter(destFile);) {
             var f = excelStyle ? CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim() : CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim();
             var csvPrinter = new CSVPrinter(writer, f);
-            source.getRows().stream().forEachOrdered(row -> printRecord(csvPrinter, row == null ? null : (List) row));
+            source.getRows().stream()
+                    .map(row -> row == null ? TGS_ListUtils.of() : (List) row)
+                    .map(row -> {
+                        TGS_Union<Boolean> u;
+                        try {
+                            csvPrinter.printRecord(row);
+                            u = TGS_Union.of(true);
+                        } catch (IOException ex) {
+                            u = TGS_Union.ofThrowable(ex);
+                        }
+                        return u;
+                    }).forEachOrdered(u -> results.add((TGS_Union<Boolean>) u));
             csvPrinter.flush();
-            return TGS_Union.of(destFile);
+            return TGS_Union.of(results);
         } catch (IOException ex) {
             return TGS_Union.ofThrowable(ex);
         }
