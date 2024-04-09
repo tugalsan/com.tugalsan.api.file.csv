@@ -23,14 +23,14 @@ public class TS_FileCsvUtils {
                             csvPrinter.printRecord(row);
                             u = TGS_Union.of(true);
                         } catch (IOException ex) {
-                            u = TGS_Union.ofThrowable(ex);
+                            u = TGS_Union.ofExcuse(ex);
                         }
                         return u;
                     }).forEachOrdered(u -> results.add((TGS_Union<Boolean>) u));
             csvPrinter.flush();
             return TGS_Union.of(results);
         } catch (IOException ex) {
-            return TGS_Union.ofThrowable(ex);
+            return TGS_Union.ofExcuse(ex);
         }
     }
 
@@ -47,7 +47,7 @@ public class TS_FileCsvUtils {
             });
             return TGS_Union.of(destTable);
         } catch (IOException ex) {
-            return TGS_Union.ofThrowable(ex);
+            return TGS_Union.ofExcuse(ex);
         }
     }
 
