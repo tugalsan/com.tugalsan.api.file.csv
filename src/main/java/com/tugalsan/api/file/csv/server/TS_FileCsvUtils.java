@@ -1,16 +1,17 @@
 package com.tugalsan.api.file.csv.server;
 
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
 import org.apache.commons.csv.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.*;
 import com.tugalsan.api.list.client.*;
-import com.tugalsan.api.unsafe.client.*;
+
 
 public class TS_FileCsvUtils {
 
     private static void printRecord(CSVPrinter printer, List data) {
-        TGS_UnSafe.run(() -> {
+        TGS_FuncMTCEUtils.run(() -> {
             if (data == null) {
                 return;
             }
@@ -19,7 +20,7 @@ public class TS_FileCsvUtils {
     }
 
     public static Path toFile(TGS_ListTable source, Path destFile, boolean excelStyle) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             try ( var writer = Files.newBufferedWriter(destFile);) {
                 var f = excelStyle ? CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim() : CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim();
                 var csvPrinter = new CSVPrinter(writer, f);
@@ -31,7 +32,7 @@ public class TS_FileCsvUtils {
     }
 
     public static TGS_ListTable toTable(Path sourceFile, boolean excelStyle) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             try ( var reader = Files.newBufferedReader(sourceFile);) {
                 var destTable = TGS_ListTable.ofStr();
                 var f = excelStyle ? CSVFormat.EXCEL.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim() : CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim();
