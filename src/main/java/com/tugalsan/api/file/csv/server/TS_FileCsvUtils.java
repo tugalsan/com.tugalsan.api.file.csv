@@ -9,6 +9,10 @@ import com.tugalsan.api.list.client.*;
 
 
 public class TS_FileCsvUtils {
+    
+    private TS_FileCsvUtils(){
+        
+    }
 
     private static void printRecord(CSVPrinter printer, List data) {
         TGS_FuncMTCUtils.run(() -> {
